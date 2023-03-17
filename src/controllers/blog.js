@@ -11,7 +11,7 @@ const BLOG = async (req, res) => {
   const id = blog[blog.length - 1]?.id + 1 || 1;
   const schema = Joi.object({
     image: Joi.required(),
-    title: Joi.string(),
+    title: Joi.string().required(),
     text: Joi.string().required(),
   });
 
@@ -31,6 +31,7 @@ const BLOG = async (req, res) => {
     title,
     text,
     path,
+    view: 0,
   };
 
   const all = blog.length ? [...blog, newBlog] : [newBlog];
@@ -38,10 +39,15 @@ const BLOG = async (req, res) => {
   res.status(200).json({ message: "Blog created" });
 };
 
-const GET_BLOG = async (_, res) => {
+const GET_BLOG = async (req, res) => {
   const blog = await Blogs.read();
+  const { viewBlog } = req.query;
+
+  if (viewBlog) {
+    console.log(blog[2].view + 1);
+  }
+
   res.status(200).json(blog);
 };
 
 module.exports = { BLOG, GET_BLOG };
-//
